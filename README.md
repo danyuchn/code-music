@@ -17,11 +17,19 @@
 
 **注意**：這個**不是傳統 MCP server**，而是「自帶網頁舞台 + REST API」。Claude Code 透過 `curl` POST 到 `localhost:3000/api/code` 寫入 pattern、`/api/play` 開始播放。優勢：不用註冊任何 MCP，啟動 dev server 就能用。
 
-**內建 4 個 slash command**（裝完後 Claude Code 自動可用）：
+**內建 7 個 skill**（位於 `strudel-claude/.claude/skills/`，從該目錄啟動 Claude Code 自動載入）：
+- `/strudel` — Strudel 語法 / mini-notation / 效果器 / 音階參考
+- `/api` — REST API 傳輸層（push code / play / stop）
 - `/tutorial` — 從零教 Strudel + 樂理
 - `/dj-set` — 即時 DJ 表演模式
 - `/compose` — 完整曲目創作
 - `/interactive` — 互動式音樂創作
+- `/visuals` — 加上 pianoroll / spiral / scope 視覺化
+
+**內建 3 套示範曲**（`strudel-claude/tracks/`）— 直接複製貼上就能聽：
+- `DOOM/` — DOOM 金屬風（兩首：Rip and Tear 132 BPM、Funeral for the Damned 67 BPM）
+- `FRED/` — FRED again.. 風 melodic house
+- `SOLOMUN/` — Solomun 風 deep house
 
 **安全掃描 (2026-04-25)**：
 - 源碼：CLEAN（無網路呼叫、無 eval、無 spawn）
@@ -72,12 +80,16 @@ npm run dev
 
 ### Step 4：在另一個 terminal 啟動 Claude Code
 
+**從 `strudel-claude/` 子目錄啟動**（這樣才會載入 7 個 strudel skill + midi-generation 軟連結）：
+
 ```bash
-cd ~/code-music
+cd ~/code-music/strudel-claude
 claude
 ```
 
 跟它說：「我準備好了，請用 `/dj-set` 給我 5 分鐘暗黑工業 techno，140 BPM」
+
+> **為什麼不從 `~/code-music/` 啟動？** Claude Code 只自動載入當前目錄 `.claude/skills/` 下的 skill。從根目錄啟動只會看到 midi-generation 一個 skill；從 `strudel-claude/` 啟動則會看到 8 個（7 個內建 + 1 個 midi-generation 軟連結）。
 
 ### Step 5（可選，進階）：裝真正的 MCP server
 

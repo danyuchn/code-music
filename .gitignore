@@ -12,6 +12,9 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Session artifacts (MCP screenshots, temp files)
+tmp/
+
 # Editor
 .vscode/
 .idea/

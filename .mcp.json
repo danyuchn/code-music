@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "live-coding-music-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@williamzujkowski/live-coding-music-mcp"
+      ],
+      "env": {}
+    }
+  }
+}

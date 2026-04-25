@@ -103,11 +103,25 @@ Try: `/dj-set give me 5 minutes of dark industrial techno at 140 BPM`
 
 ### 6. (Optional, advanced) Install a real MCP server
 
-For more pro tooling (FFT spectrum analysis, beat detection, ~66 tools), consider adding williamzujkowski/live-coding-music-mcp:
+For more pro tooling (FFT spectrum analysis, beat detection, ~66 tools), add williamzujkowski/live-coding-music-mcp:
 
 ```bash
-claude mcp add -s project strudel-mcp -- npx -y @williamzujkowski/strudel-mcp-server
+claude mcp add -s project live-coding-music-mcp -- npx -y @williamzujkowski/live-coding-music-mcp
 ```
+
+The MCP launches its own Chromium window pointing at https://strudel.cc/ (visible by default — that window is the speakers, do **not** close it).
+
+First time you use it, run `npx playwright install chromium` so the bundled Playwright can find a browser binary.
+
+#### Known issue: manual Update button workflow
+
+The MCP's `play` tool re-evaluates patterns by sending `Ctrl+Enter`, which requires the CodeMirror editor to hold keyboard focus. Once the Strudel page renders other UI elements (the welcome panel, the docs sidebar, etc.), the editor loses focus and subsequent `Ctrl+Enter` events are dropped. This means **after Claude pushes a new pattern, the audio engine keeps playing the previous one** until you manually intervene.
+
+Workaround: when Claude says it pushed a new pattern, click the **Update** button (top-right of the Strudel editor) — or press `Ctrl+Enter` while the editor is focused. The new pattern swaps in seamlessly on the next bar boundary; audio does not stop.
+
+This affects every tool that internally re-evaluates: `write` (with `auto_play: true`), `set_energy`, `shift_mood`, `refine`, `generate_pattern`, etc. The non-evaluating tools (`append`, `insert`, `replace`, `clear`) just modify the editor text without trying to play, so they always need a manual Update too.
+
+If you want a fix rather than a workaround, fork the MCP and change `StrudelController.play()` to fall back to clicking the on-page Update button when the keyboard event fails — or open an issue at https://github.com/williamzujkowski/live-coding-music-mcp/issues.
 
 ## Directory structure
 

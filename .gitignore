@@ -15,6 +15,16 @@ Thumbs.db
 # Session artifacts (MCP screenshots, temp files)
 tmp/
 
+# Audio assets (samples, stems, renders — fair-use only, never commit)
+tracks/remix-stems/
+*.wav
+*.mp3
+*.flac
+*.aif
+*.aiff
+*.ogg
+*.m4a
+
 # Editor
 .vscode/
 .idea/

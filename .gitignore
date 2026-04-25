@@ -1,0 +1,22 @@
+# Personal Claude Code instructions (kept local, not for public repo)
+CLAUDE.md
+.claude/settings.local.json
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Env
+.env
+.env.local
+.env.*.local

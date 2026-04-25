@@ -1,0 +1,3 @@
+[submodule "strudel-claude"]
+	path = strudel-claude
+	url = https://github.com/renatoworks/strudel-claude.git

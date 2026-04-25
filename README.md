@@ -1,135 +1,148 @@
-# code-music — Live Coding 音樂玩具箱
+# code-music — Live Coding Music Toybox
 
-零音樂基礎，用 Claude Code + Strudel 即時生成電子音樂。
+Generate live electronic music with Claude Code + Strudel, no music theory required.
 
-## 想做什麼
+## What this is
 
-像 Algorave 表演者那樣，在 strudel.cc 風格的環境裡 live coding 出音樂；但因為自己不會樂理，所以**讓 Claude 當副 DJ**：
-- 我用感覺下令（「給我暗黑工業 techno」「再黑暗一點」「轉 ambient」）
-- Claude 透過已裝好的 skill + 樂理知識，寫 Strudel pattern 並丟進播放器
-- 我只負責下指令、聽感覺、決定方向
+An Algorave-style setup where you live-code music in a Strudel REPL — but since you don't know music theory, **Claude is your co-DJ**:
 
-## 已裝的東西
+- You give vibe-based commands ("dark industrial techno", "make it darker", "switch to ambient")
+- Claude uses pre-installed skills + music theory knowledge to write Strudel patterns and push them into the player
+- You just steer with feel, no code, no theory
 
-### 1. `strudel-claude/` — 主舞台（Next.js + Strudel REPL + REST API）
+## What's installed
 
-來源：https://github.com/renatoworks/strudel-claude (39★, 1 issue)
+### 1. `strudel-claude/` — the stage (Next.js + Strudel REPL + REST API)
 
-**注意**：這個**不是傳統 MCP server**，而是「自帶網頁舞台 + REST API」。Claude Code 透過 `curl` POST 到 `localhost:3000/api/code` 寫入 pattern、`/api/play` 開始播放。優勢：不用註冊任何 MCP，啟動 dev server 就能用。
+Source: https://github.com/renatoworks/strudel-claude
 
-**內建 7 個 skill**（位於 `strudel-claude/.claude/skills/`，從該目錄啟動 Claude Code 自動載入）：
-- `/strudel` — Strudel 語法 / mini-notation / 效果器 / 音階參考
-- `/api` — REST API 傳輸層（push code / play / stop）
-- `/tutorial` — 從零教 Strudel + 樂理
-- `/dj-set` — 即時 DJ 表演模式
-- `/compose` — 完整曲目創作
-- `/interactive` — 互動式音樂創作
-- `/visuals` — 加上 pianoroll / spiral / scope 視覺化
+**Note**: this is **not a traditional MCP server** — it's a "self-hosted web stage with REST API". Claude Code uses `curl` to POST to `localhost:3000/api/code` (push patterns) and `/api/play` (start playback). Upside: no MCP registration needed, just start the dev server.
 
-**內建 3 套示範曲**（`strudel-claude/tracks/`）— 直接複製貼上就能聽：
-- `DOOM/` — DOOM 金屬風（兩首：Rip and Tear 132 BPM、Funeral for the Damned 67 BPM）
-- `FRED/` — FRED again.. 風 melodic house
-- `SOLOMUN/` — Solomun 風 deep house
+**7 built-in skills** (in `strudel-claude/.claude/skills/`, auto-loaded when Claude Code starts from this project root via the symlinks below):
 
-**安全掃描 (2026-04-25)**：
-- 源碼：CLEAN（無網路呼叫、無 eval、無 spawn）
-- 依賴：7 個 npm 漏洞（1 HIGH + 5 MED + 1 LOW），全部在 `next 16.1.6`，皆為 DoS / CSRF bypass，**只影響公開部署，本機開發不受影響**
-- 後續：可跑 `npm update next@latest` 升級到 16.1.7+ 解決
+- `/strudel` — Strudel syntax / mini-notation / effects / scales reference
+- `/api` — REST API transport layer (push code / play / stop)
+- `/tutorial` — teach Strudel + theory from scratch
+- `/dj-set` — live DJ performance mode
+- `/compose` — full track composition
+- `/interactive` — interactive music creation
+- `/visuals` — pianoroll / spiral / scope visualization
 
-### 2. `.claude/skills/midi-generation/` — 樂理腦袋（Project-level Skill）
+**3 demo tracks** (`strudel-claude/tracks/`) — copy-paste to play:
 
-來源：https://github.com/tubone24/midi-agent-skill (9★, 0 issue)
+- `DOOM/` — DOOM metal (Rip and Tear 132 BPM, Funeral for the Damned 67 BPM)
+- `FRED/` — FRED again.. style melodic house
+- `SOLOMUN/` — Solomun-style deep house
 
-**做什麼**：給 Claude 完整樂理知識，包含：
-- `resources/music-theory.md` — 音階、和弦、終止式
-- `resources/chord-progressions.md` — 各曲風和弦進行
-- `resources/voice-leading.md` — 防止刺耳（半音衝突、音域分散規則）
-- `resources/counterpoint.md` — 古典對位
-- `resources/modes-scales.md` — 教會調式（Dorian / Phrygian 等）
-- `resources/rhythm-patterns.md` — 節奏型、切分音
-- `resources/orchestration.md` — 樂器音域、組合
-- `skills/generate_midi.py` — 生 MIDI 檔
-- `skills/convert_to_wav.py` — MIDI → WAV（需 FluidSynth）
+### 2. `.claude/skills/midi-generation/` — the music theory brain (project-level skill)
 
-**怎麼觸發**：說「composing」「generate MIDI」「melody」「chord progression」Claude 會自動載入。
+Source: https://github.com/tubone24/midi-agent-skill
 
-**安全掃描**：CLEAN。
+Gives Claude full music theory knowledge:
 
-## 待你來啟動 Claude Code 後做的事
+- `resources/music-theory.md` — scales, chords, cadences
+- `resources/chord-progressions.md` — genre-specific chord progressions
+- `resources/voice-leading.md` — avoid harshness (semitone clashes, range distribution)
+- `resources/counterpoint.md` — classical counterpoint
+- `resources/modes-scales.md` — church modes (Dorian / Phrygian / etc.)
+- `resources/rhythm-patterns.md` — rhythm patterns, syncopation
+- `resources/orchestration.md` — instrument ranges, combinations
+- `skills/generate_midi.py` — MIDI file generator
+- `skills/convert_to_wav.py` — MIDI → WAV (requires FluidSynth)
 
-### Step 1：安裝 Strudel 舞台依賴
+**Trigger words**: "composing", "generate MIDI", "melody", "chord progression" — Claude auto-loads it.
+
+## Getting started
+
+### 1. Clone with submodules
 
 ```bash
-cd ~/code-music/strudel-claude
+git clone --recurse-submodules <this-repo-url>
+cd code-music
+```
+
+If you already cloned without `--recurse-submodules`:
+
+```bash
+git submodule update --init --recursive
+```
+
+### 2. Install Strudel stage dependencies
+
+```bash
+cd strudel-claude
 npm install
 ```
-（會下載 ~200MB node_modules，第一次跑要等一下）
 
-### Step 2：升級 next 修漏洞（可選但建議）
+(~200MB of node_modules; first run takes a moment.)
+
+### 3. (Optional) Patch next.js vulnerabilities
 
 ```bash
 npm install next@latest
 ```
 
-### Step 3：啟動舞台
+### 4. Start the stage
 
 ```bash
 npm run dev
 ```
-打開 http://localhost:3000，全螢幕 Strudel 編輯器跑起來。
 
-### Step 4：在另一個 terminal 啟動 Claude Code
+Open http://localhost:3000 — full-screen Strudel editor.
 
-**從 `strudel-claude/` 子目錄啟動**（這樣才會載入 7 個 strudel skill + midi-generation 軟連結）：
+### 5. In another terminal, start Claude Code
+
+**From the project root** (the `.claude/skills/` symlinks load all 8 skills):
 
 ```bash
-cd ~/code-music/strudel-claude
+cd ..       # back to code-music/
 claude
 ```
 
-跟它說：「我準備好了，請用 `/dj-set` 給我 5 分鐘暗黑工業 techno，140 BPM」
+Try: `/dj-set give me 5 minutes of dark industrial techno at 140 BPM`
 
-> **為什麼不從 `~/code-music/` 啟動？** Claude Code 只自動載入當前目錄 `.claude/skills/` 下的 skill。從根目錄啟動只會看到 midi-generation 一個 skill；從 `strudel-claude/` 啟動則會看到 8 個（7 個內建 + 1 個 midi-generation 軟連結）。
+### 6. (Optional, advanced) Install a real MCP server
 
-### Step 5（可選，進階）：裝真正的 MCP server
-
-如果之後想用更專業的工具（FFT 頻譜分析、自動節奏偵測等 66 個工具），可考慮加裝 williamzujkowski/live-coding-music-mcp（196★）作為 project-level MCP：
+For more pro tooling (FFT spectrum analysis, beat detection, ~66 tools), consider adding williamzujkowski/live-coding-music-mcp:
 
 ```bash
 claude mcp add -s project strudel-mcp -- npx -y @williamzujkowski/strudel-mcp-server
 ```
 
-## 目錄結構
+## Directory structure
 
 ```
 code-music/
-├── README.md                          ← 本檔
+├── README.md
 ├── .claude/
 │   └── skills/
-│       └── midi-generation/           ← 樂理 skill（project-level）
-│           ├── SKILL.md
-│           ├── resources/             ← 7 份樂理參考
-│           ├── skills/                ← Python MIDI 生成腳本
-│           └── ...
-└── strudel-claude/                    ← Strudel 主舞台（Next.js）
+│       ├── midi-generation/      ← real (project-level music theory skill)
+│       ├── api → ../../strudel-claude/.claude/skills/api
+│       ├── compose → ...
+│       ├── dj-set → ...
+│       ├── interactive → ...
+│       ├── strudel → ...
+│       ├── tutorial → ...
+│       └── visuals → ...
+└── strudel-claude/               ← Strudel stage (Next.js, git submodule)
     ├── README.md
     ├── package.json
     └── src/
 ```
 
-## Project-level vs User-level 差異
+## Project-level vs user-level
 
-| 範圍 | MCP 設定檔 | Skill 位置 |
-|------|-----------|-----------|
+| Scope | MCP config | Skill location |
+|-------|-----------|----------------|
 | User | `~/.claude.json` | `~/.claude/skills/` |
-| **Project（本專案用）** | `<project>/.mcp.json` | `<project>/.claude/skills/` |
+| **Project (this repo)** | `<project>/.mcp.json` | `<project>/.claude/skills/` |
 
-本專案所有 MCP / Skill **只在這個目錄下生效**，不會污染其他專案。離開資料夾就消失。
+Everything here is scoped to this directory — leave the folder, it disappears. No pollution to other projects.
 
-## 已讀的調查資料
+## Live coding hot-swap
 
-- 比對 5 個 Strudel MCP 候選（renatoworks 因 slash commands 對新手最友善 + REST 架構比 Playwright 穩）
-- 比對 6+ 個音樂 skill（midi-agent-skill 因樂理最完整 + 0 issue + 不依賴 Suno 或外部 API 而選中）
-- 排除：bitwize-music-studio (Suno 付費)、kennethleungty/claude-music (背景音樂非創作)、etbars/strudel-claude-music-generator (要 Claude API key)
+Strudel is built for non-stop live editing: when you (or Claude via `/api/code`) update a pattern and re-evaluate, the change applies on the next bar boundary. Drums don't drop, beat doesn't skip — just like Algorave performers do on stage.
 
-詳見 2026-04-25 對話紀錄。
+## Security
+
+Source code is clean (no network calls, no `eval`, no spawn). The `next 16.1.6` dependency has 7 npm audit findings (1 HIGH + 5 MED + 1 LOW), all DoS / CSRF bypass — they only affect public deployments, not local dev. Run `npm install next@latest` to patch if you care.

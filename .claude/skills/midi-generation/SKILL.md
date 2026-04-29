@@ -12,7 +12,7 @@ Generate MIDI files with proper music theory. **Use the provided Python scripts 
 
 1. **Use provided scripts** in `skills/` directory (Python)
 2. **Never write custom Python/JS** for MIDI generation
-3. **Install dependencies first**: `pip install midiutil`
+3. **Install dependencies first**: `uv add midiutil`
 4. **Consult music theory resources** when needed (see below)
 
 ## Quick Dissonance Rules
@@ -52,7 +52,7 @@ Generate MIDI files with proper music theory. **Use the provided Python scripts 
 
 ## Workflow
 
-1. **Install dependencies**: `pip install midiutil`
+1. **Install dependencies**: `uv add midiutil`
 2. **Identify genre/style** → Select appropriate resources
 3. **Read relevant theory** → Only the files you need
 4. **Choose instruments** → See [midi_types/gm_instruments.py](midi_types/gm_instruments.py)

@@ -33,3 +33,7 @@ tracks/remix-stems/
 .env
 .env.local
 .env.*.local
+
+# Codex AI files
+.codex/
+AGENTS.md

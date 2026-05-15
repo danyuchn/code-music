@@ -37,3 +37,6 @@ tracks/remix-stems/
 # Codex AI files
 .codex/
 AGENTS.md
+
+# Scheduled task lock (cron mutex, runtime artifact)
+.claude/scheduled_tasks.lock
